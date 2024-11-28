@@ -1,0 +1,84 @@
+﻿@model WebApplication3.NewFolder.Registrants
+
+@{
+    ViewBag.Title = "Student Registration";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Register", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    <div style="display:flex;flex-direction:column;align-items:center">
+    <div >
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name, "", new { style = "color:red;"})
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email)
+        @Html.ValidationMessageFor(m => m.Email, "", new { style = "color:red;"})
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Mobile)
+        @Html.TextBoxFor(m => m.Mobile)
+        @Html.ValidationMessageFor(m => m.Mobile, "", new { style = "color:red;"})
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.State)
+        @Html.DropDownListFor(m => m.State, new SelectList((IEnumerable<string>)ViewBag.States), "Select State", new { @class = "state-dropdown" })
+        @* @Html.ValidationMessageFor(m => m.State) *@
+        @Html.ValidationMessageFor(m => m.State, "", new { style = "color:red;" })
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.City)
+        @Html.DropDownListFor(m => m.City, new SelectList((List<string>)ViewBag.Cities), "Select City")
+        @Html.ValidationMessageFor(m => m.City , "", new { style = "color:red;"})
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.AboutYourself)
+        @Html.TextAreaFor(m => m.AboutYourself)
+        @Html.ValidationMessageFor(m => m.AboutYourself, "", new { style = "color:red;"})
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Photo)
+        @Html.TextBoxFor(m => m.Photo, new { type = "file" })
+        @Html.ValidationMessageFor(m => m.Photo, "", new { style = "color:red;"})
+    </div>
+
+
+    <div>
+            <button class=" btn btn-primary" type="submit">Submit</button>
+    </div>
+    </div>
+        }
+
+
+@section scripts {
+    <script>
+        $(".state-dropdown").change(function () {
+            var selectedState = $(this).val();
+            $.getJSON('@Url.Action("GetCitiesByState", "Student")', { state: selectedState }, function (data) {
+                var cityDropdown = $("select[name='City']");
+                cityDropdown.empty();
+                $.each(data, function (index, value) {
+                    cityDropdown.append('<option value="' + value + '">' + value + '</option>');
+                });
+            });
+        });
+    </script>
+}

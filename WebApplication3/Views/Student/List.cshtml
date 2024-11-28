@@ -1,0 +1,52 @@
+﻿@model List<WebApplication3.NewFolder.Registrants>
+
+@{
+    ViewBag.Title = "Registered Students";
+}
+
+<h2>@ViewBag.Title</h2>
+<a href="@Url.Action("Register", "Student")" class="btn btn-primary">Add New Student</a>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>State</th>
+            <th>City</th>
+            <th>About Yourself</th>
+            <th>Photo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Name</td>
+                <td>@student.Email</td>
+                <td>@student.Mobile</td>
+                <td>@student.State</td>
+                <td>@student.City</td>
+                <td>@student.AboutYourself</td>
+                <td>
+
+
+                </td>
+                <td>
+
+                    <a href="@Url.Action("Edit", "Student", new { Id = student.Id })" class="btn btn-warning">Edit</a>
+                    @Html.ActionLink("Delete", "Delete", new { Id = student.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
